@@ -12,6 +12,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.Properties;
+
 public class MainActivity extends AppCompatActivity {
     private WebView webview;
 
@@ -33,9 +35,13 @@ public class MainActivity extends AppCompatActivity {
         WebSettings s = webview.getSettings();
         String ua = s.getUserAgentString();
         String cache_mode = "true";
+        String proxy_ip = "";
+        String proxy_port = "";
         if(intent != null){
             ua = intent.getStringExtra("user_agent");
             cache_mode = intent.getStringExtra("cache_mode");
+            proxy_ip = intent.getStringExtra("proxy_ip");
+            proxy_port = intent.getStringExtra("proxy_port");
         }
         s.setUserAgentString(ua);
         if( cache_mode == "true")
@@ -50,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
 
         s.setDomStorageEnabled(true);
         s.setBuiltInZoomControls(false);
+
+        Properties prop = System.getProperties();
+        if(proxy_ip != null) {
+            prop.setProperty("proxySet", "true");
+            prop.setProperty("proxyHost", proxy_ip);
+            prop.setProperty("proxyPort", proxy_port);
+        }
+//        super.onCreate();
+//        initMainHandler();
+//        initContext();
+//        initOKhttpAndCookie();
+
         webview.setWebChromeClient(new WebChromeClient());
         webview.setWebViewClient(new WebViewClient() {
             @Override
